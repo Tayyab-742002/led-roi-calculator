@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Simple Economic Tool</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Header Styles */
+      .header {
+        background: linear-gradient(135deg, #2c3e50, #34495e);
+        color: white;
+        padding: 20px;
+        border-radius: 10px 10px 0 0;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 300;
+        margin: 0;
+      }
+
+      .header-buttons {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background-color: #e67e22;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: #d35400;
+        transform: translateY(-2px);
+      }
+
+      .btn-secondary {
+        background-color: white;
+        color: #2c3e50;
+        border: 2px solid #2c3e50;
+      }
+
+      .btn-secondary:hover {
+        background-color: #2c3e50;
+        color: white;
+      }
+
+      /* General Inputs Section */
+      .general-inputs {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .general-inputs h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+      }
+
+      .input-group {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .input-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .input-field label {
+        font-weight: 600;
+        color: #555;
+      }
+
+      .input-field input {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      .input-field input:focus {
+        outline: none;
+        border-color: #3498db;
+      }
+
+      .unit-label {
+        background-color: #95a5a6;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+
+      /* Comparison Sections */
+      .comparison-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .comparison-section {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .comparison-section h2 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        text-align: center;
+      }
+
+      .baseline h2 {
+        color: #3498db;
+      }
+
+      .proposed h2 {
+        color: #27ae60;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #3498db;
+      }
+
+      /* Results Display */
+      .results {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+
+      .results h3 {
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .result-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .result-item:last-child {
+        border-bottom: none;
+      }
+
+      .result-label {
+        font-weight: 600;
+      }
+
+      .result-value {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+
+      .proposed .results {
+        background: linear-gradient(135deg, #27ae60, #229954);
+      }
+
+      /* Savings Section */
+      .savings-section {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .savings-section h2 {
+        margin-bottom: 20px;
+        font-size: 2rem;
+      }
+
+      .savings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+      }
+
+      .savings-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+      }
+
+      .savings-value {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+
+      .savings-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      /* Footer */
+      .footer {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      /* Chart Container */
+      .chart-container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .chart-content {
+        margin-top: 20px;
+      }
+
+      .chart-div {
+        display: none;
+        min-height: 400px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .chart-div.active {
+        display: block;
+      }
+
+      .chart-div canvas {
+        max-width: 100%;
+        height: auto;
+      }
+
+      /* Control and Rebate Fields */
+      .control-fields,
+      .rebate-fields {
+        transition: all 0.3s ease;
+      }
+
+      .control-fields.show,
+      .rebate-fields.show {
+        display: block !important;
+      }
+
+      .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background-color: #ecf0f1;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .tab.active {
+        background-color: #3498db;
+        color: white;
+      }
+
+      .tab:hover:not(.active) {
+        background-color: #bdc3c7;
+      }
+
+      .disclaimer {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .disclaimer a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .disclaimer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .comparison-container {
+          grid-template-columns: 1fr;
+        }
+
+        .header {
+          flex-direction: column;
+          text-align: center;
+          gap: 20px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .input-group {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .savings-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .comparison-section {
+          padding: 15px;
+        }
+
+        .general-inputs {
+          padding: 15px;
+        }
+      }
+
+      /* Print Styles */
+      @media print {
+        .header-buttons,
+        .btn {
+          display: none;
+        }
+
+        body {
+          background: white;
+        }
+
+        .container {
+          max-width: none;
+          padding: 0;
+        }
+
+        .comparison-section,
+        .general-inputs,
+        .savings-section,
+        .footer {
+          box-shadow: none;
+          border: 1px solid #ddd;
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Simple Economic Tool</h1>
+        <div class="header-buttons">
+          <button class="btn btn-primary" onclick="toggleControls()">
+            Add Control
+          </button>
+          <button class="btn btn-primary" onclick="toggleRebates()">
+            Add Rebate
+          </button>
+          <button class="btn btn-secondary" onclick="printResults()">
+            Print
+          </button>
+        </div>
+      </div>
+
+      <!-- General Inputs -->
+      <div class="general-inputs">
+        <h2>General Parameters</h2>
+        <div class="input-group">
+          <div class="input-field">
+            <label for="electricityRate">Electricity Rate</label>
+            <input
+              type="number"
+              id="electricityRate"
+              value="10"
+              min="0"
+              step="0.01"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="unit-label">cents/kWh</div>
+
+          <div class="input-field">
+            <label for="operationHours">Operation Hours</label>
+            <input
+              type="number"
+              id="operationHours"
+              value="12"
+              min="0"
+              max="24"
+              step="0.5"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="unit-label">hours/day</div>
+        </div>
+      </div>
+
+      <!-- Comparison Sections -->
+      <div class="comparison-container">
+        <!-- Baseline Section -->
+        <div class="comparison-section baseline">
+          <h2>Baseline</h2>
+          <div class="form-group">
+            <label for="baselineDescription">Description/Catalog</label>
+            <input
+              type="text"
+              id="baselineDescription"
+              placeholder="Enter current lighting description"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="baselineQuantity">Quantity</label>
+            <input
+              type="number"
+              id="baselineQuantity"
+              value="0"
+              min="0"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="baselineWatts">Watts Per Luminaire</label>
+            <input
+              type="number"
+              id="baselineWatts"
+              value="0"
+              min="0"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="baselineCost">Cost Per Luminaire</label>
+            <input
+              type="number"
+              id="baselineCost"
+              value="0"
+              min="0"
+              step="0.01"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Control Fields (Hidden by default) -->
+          <div class="form-group control-fields" style="display: none">
+            <label for="baselineControlQty">Control Quantity</label>
+            <input
+              type="number"
+              id="baselineControlQty"
+              value="0"
+              min="0"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group control-fields" style="display: none">
+            <label for="baselineControlReduction">Control Reduction (%)</label>
+            <input
+              type="number"
+              id="baselineControlReduction"
+              value="0"
+              min="0"
+              max="100"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group control-fields" style="display: none">
+            <label for="baselineControlCost">Control Cost</label>
+            <input
+              type="number"
+              id="baselineControlCost"
+              value="0"
+              min="0"
+              step="0.01"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Rebate Fields (Hidden by default) -->
+          <div class="form-group rebate-fields" style="display: none">
+            <label for="baselineRebateDescription">Rebate Description</label>
+            <input
+              type="text"
+              id="baselineRebateDescription"
+              placeholder="Enter rebate description"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group rebate-fields" style="display: none">
+            <label for="baselineRebateValue">Rebate Value</label>
+            <input
+              type="text"
+              id="baselineRebateValue"
+              placeholder="Enter rebate value or calculation (e.g., 100 or 0.1*x)"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Baseline Results -->
+          <div class="results">
+            <h3>Baseline Results</h3>
+            <div class="result-item">
+              <span class="result-label">Initial Cost:</span>
+              <span class="result-value" id="baselineInitialCost">$0</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Annual Energy Usage:</span>
+              <span class="result-value" id="baselineAnnualEnergy"
+                >0.00 kWh</span
+              >
+            </div>
+            <div class="result-item">
+              <span class="result-label">Annual Cost:</span>
+              <span class="result-value" id="baselineAnnualCost">$0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Proposed Section -->
+        <div class="comparison-section proposed">
+          <h2>Proposed</h2>
+          <div class="form-group">
+            <label for="proposedProduct">Product Selection</label>
+            <select id="proposedProduct" onchange="updateProposedWatts()">
+              <option value="">Select a product...</option>
+              <!-- Product options will be populated by JavaScript -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="proposedDescription">Description/Catalog</label>
+            <input
+              type="text"
+              id="proposedDescription"
+              placeholder="Product description"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="proposedQuantity">Quantity</label>
+            <input
+              type="number"
+              id="proposedQuantity"
+              value="0"
+              min="0"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group">
+            <label for="proposedWatts">Watts Per Luminaire</label>
+            <input
+              type="number"
+              id="proposedWatts"
+              value="0"
+              min="0"
+              readonly
+            />
+          </div>
+          <div class="form-group">
+            <label for="proposedCost">Cost Per Luminaire</label>
+            <input
+              type="number"
+              id="proposedCost"
+              value="0"
+              min="0"
+              step="0.01"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Control Fields (Hidden by default) -->
+          <div class="form-group control-fields" style="display: none">
+            <label for="proposedControlQty">Control Quantity</label>
+            <input
+              type="number"
+              id="proposedControlQty"
+              value="0"
+              min="0"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group control-fields" style="display: none">
+            <label for="proposedControlReduction">Control Reduction (%)</label>
+            <input
+              type="number"
+              id="proposedControlReduction"
+              value="0"
+              min="0"
+              max="100"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group control-fields" style="display: none">
+            <label for="proposedControlCost">Control Cost</label>
+            <input
+              type="number"
+              id="proposedControlCost"
+              value="0"
+              min="0"
+              step="0.01"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Rebate Fields (Hidden by default) -->
+          <div class="form-group rebate-fields" style="display: none">
+            <label for="proposedRebateDescription">Rebate Description</label>
+            <input
+              type="text"
+              id="proposedRebateDescription"
+              placeholder="Enter rebate description"
+              onchange="calculateAll()"
+            />
+          </div>
+          <div class="form-group rebate-fields" style="display: none">
+            <label for="proposedRebateValue">Rebate Value</label>
+            <input
+              type="text"
+              id="proposedRebateValue"
+              placeholder="Enter rebate value or calculation (e.g., 100 or 0.1*x)"
+              onchange="calculateAll()"
+            />
+          </div>
+
+          <!-- Proposed Results -->
+          <div class="results">
+            <h3>Proposed Results</h3>
+            <div class="result-item">
+              <span class="result-label">Initial Cost:</span>
+              <span class="result-value" id="proposedInitialCost">$0</span>
+            </div>
+            <div class="result-item">
+              <span class="result-label">Annual Energy Usage:</span>
+              <span class="result-value" id="proposedAnnualEnergy"
+                >0.00 kWh</span
+              >
+            </div>
+            <div class="result-item">
+              <span class="result-label">Annual Cost:</span>
+              <span class="result-value" id="proposedAnnualCost">$0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Savings Section -->
+      <div class="savings-section">
+        <h2>Economic Analysis</h2>
+        <div class="savings-grid">
+          <div class="savings-item">
+            <div class="savings-value" id="annualSavings">$0</div>
+            <div class="savings-label">Annual Savings</div>
+          </div>
+          <div class="savings-item">
+            <div class="savings-value" id="paybackPeriod">0.0</div>
+            <div class="savings-label">Payback Period (Years)</div>
+          </div>
+          <div class="savings-item">
+            <div class="savings-value" id="roiPercentage">0%</div>
+            <div class="savings-label">ROI</div>
+          </div>
+          <div class="savings-item">
+            <div class="savings-value" id="tenYearSavings">$0</div>
+            <div class="savings-label">10-Year Savings</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Container -->
+      <div class="chart-container">
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('tenYear')">
+            10 Year
+          </button>
+          <button class="tab" onclick="showTab('cashflow')">Cashflow</button>
+        </div>
+        <div class="chart-content">
+          <div id="chart_div" class="chart-div active"></div>
+          <div id="cashflow_div" class="chart-div"></div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <div class="disclaimer">
+          This tool is only for simple analysis and payback information.
+          <a href="#" onclick="showDisclaimer()">Disclaimer</a>. Use the Visual
+          Economic Tool for complete analysis. Copyright Acuity Brands Lighting,
+          Inc.
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      // Product Catalog Data
+      const productCatalog = [
+        // Tundra Area Light Series
+        {
+          id: "tundra-70",
+          name: "Tundra Area Light - 70 Watt",
+          watts: 70,
+          category: "Tundra Area Light",
+        },
+        {
+          id: "tundra-100",
+          name: "Tundra Area Light - 100 Watt",
+          watts: 100,
+          category: "Tundra Area Light",
+        },
+        {
+          id: "tundra-150",
+          name: "Tundra Area Light - 150 Watt",
+          watts: 150,
+          category: "Tundra Area Light",
+        },
+        {
+          id: "tundra-200",
+          name: "Tundra Area Light - 200 Watt",
+          watts: 200,
+          category: "Tundra Area Light",
+        },
+        {
+          id: "tundra-240",
+          name: "Tundra Area Light - 240 Watt",
+          watts: 240,
+          category: "Tundra Area Light",
+        },
+        {
+          id: "tundra-300",
+          name: "Tundra Area Light - 300 Watt",
+          watts: 300,
+          category: "Tundra Area Light",
+        },
+
+        // Orbix Round UFO Light Series
+        {
+          id: "orbix-70",
+          name: "Orbix Round UFO Light - 70 Watt",
+          watts: 70,
+          category: "Orbix Round UFO Light",
+        },
+        {
+          id: "orbix-100",
+          name: "Orbix Round UFO Light - 100 Watt",
+          watts: 100,
+          category: "Orbix Round UFO Light",
+        },
+        {
+          id: "orbix-150",
+          name: "Orbix Round UFO Light - 150 Watt",
+          watts: 150,
+          category: "Orbix Round UFO Light",
+        },
+        {
+          id: "orbix-180",
+          name: "Orbix Round UFO Light - 180 Watt",
+          watts: 180,
+          category: "Orbix Round UFO Light",
+        },
+        {
+          id: "orbix-200",
+          name: "Orbix Round UFO Light - 200 Watt",
+          watts: 200,
+          category: "Orbix Round UFO Light",
+        },
+        {
+          id: "orbix-240",
+          name: "Orbix Round UFO Light - 240 Watt",
+          watts: 240,
+          category: "Orbix Round UFO Light",
+        },
+
+        // Alpine LED Wall Pack Light Series
+        {
+          id: "alpine-80",
+          name: "Alpine LED Wall Pack Light - 80 Watt",
+          watts: 80,
+          category: "Alpine LED Wall Pack Light",
+        },
+        {
+          id: "alpine-100",
+          name: "Alpine LED Wall Pack Light - 100 Watt",
+          watts: 100,
+          category: "Alpine LED Wall Pack Light",
+        },
+        {
+          id: "alpine-120",
+          name: "Alpine LED Wall Pack Light - 120 Watt",
+          watts: 120,
+          category: "Alpine LED Wall Pack Light",
+        },
+
+        // Raven Backlit Flat Panel Light 2x4 Series
+        {
+          id: "raven-2x4-30",
+          name: "Raven Backlit Flat Panel Light 2x4 - 30 Watt",
+          watts: 30,
+          category: "Raven Backlit Flat Panel Light 2x4",
+        },
+        {
+          id: "raven-2x4-40",
+          name: "Raven Backlit Flat Panel Light 2x4 - 40 Watt",
+          watts: 40,
+          category: "Raven Backlit Flat Panel Light 2x4",
+        },
+        {
+          id: "raven-2x4-50",
+          name: "Raven Backlit Flat Panel Light 2x4 - 50 Watt",
+          watts: 50,
+          category: "Raven Backlit Flat Panel Light 2x4",
+        },
+        {
+          id: "raven-2x4-60",
+          name: "Raven Backlit Flat Panel Light 2x4 - 60 Watt",
+          watts: 60,
+          category: "Raven Backlit Flat Panel Light 2x4",
+        },
+        {
+          id: "raven-2x4-72",
+          name: "Raven Backlit Flat Panel Light 2x4 - 72 Watt",
+          watts: 72,
+          category: "Raven Backlit Flat Panel Light 2x4",
+        },
+
+        // Raven Backlit Flat Panel Light 2x2/1x4 Series
+        {
+          id: "raven-2x2-15",
+          name: "Raven Backlit Flat Panel Light 2x2/1x4 - 15 Watt",
+          watts: 15,
+          category: "Raven Backlit Flat Panel Light 2x2/1x4",
+        },
+        {
+          id: "raven-2x2-20",
+          name: "Raven Backlit Flat Panel Light 2x2/1x4 - 20 Watt",
+          watts: 20,
+          category: "Raven Backlit Flat Panel Light 2x2/1x4",
+        },
+        {
+          id: "raven-2x2-25",
+          name: "Raven Backlit Flat Panel Light 2x2/1x4 - 25 Watt",
+          watts: 25,
+          category: "Raven Backlit Flat Panel Light 2x2/1x4",
+        },
+        {
+          id: "raven-2x2-30",
+          name: "Raven Backlit Flat Panel Light 2x2/1x4 - 30 Watt",
+          watts: 30,
+          category: "Raven Backlit Flat Panel Light 2x2/1x4",
+        },
+        {
+          id: "raven-2x2-40",
+          name: "Raven Backlit Flat Panel Light 2x2/1x4 - 40 Watt",
+          watts: 40,
+          category: "Raven Backlit Flat Panel Light 2x2/1x4",
+        },
+      ];
+
+      // Initialize the calculator
+      document.addEventListener("DOMContentLoaded", function () {
+        populateProductDropdown();
+        loadSavedData();
+        calculateAll();
+      });
+
+      // Populate product dropdown
+      function populateProductDropdown() {
+        const select = document.getElementById("proposedProduct");
+        select.innerHTML = '<option value="">Select a product...</option>';
+
+        // Group products by category
+        const categories = {};
+        productCatalog.forEach((product) => {
+          if (!categories[product.category]) {
+            categories[product.category] = [];
+          }
+          categories[product.category].push(product);
+        });
+
+        // Add optgroups for each category
+        Object.keys(categories).forEach((category) => {
+          const optgroup = document.createElement("optgroup");
+          optgroup.label = category;
+
+          categories[category].forEach((product) => {
+            const option = document.createElement("option");
+            option.value = product.id;
+            option.textContent = product.name;
+            optgroup.appendChild(option);
+          });
+
+          select.appendChild(optgroup);
+        });
+      }
+
+      // Update proposed watts when product is selected
+      function updateProposedWatts() {
+        const select = document.getElementById("proposedProduct");
+        const wattsInput = document.getElementById("proposedWatts");
+        const descriptionInput = document.getElementById("proposedDescription");
+
+        if (select.value) {
+          const selectedProduct = productCatalog.find(
+            (p) => p.id === select.value
+          );
+          if (selectedProduct) {
+            wattsInput.value = selectedProduct.watts;
+            descriptionInput.value = selectedProduct.name;
+          }
+        } else {
+          wattsInput.value = "";
+          descriptionInput.value = "";
+        }
+
+        calculateAll();
+      }
+
+      // Main calculation function
+      function calculateAll() {
+        // Get input values
+        const electricityRate =
+          parseFloat(document.getElementById("electricityRate").value) || 0;
+        const operationHours =
+          parseFloat(document.getElementById("operationHours").value) || 0;
+
+        // Baseline calculations
+        const baselineQuantity =
+          parseInt(document.getElementById("baselineQuantity").value) || 0;
+        const baselineWatts =
+          parseFloat(document.getElementById("baselineWatts").value) || 0;
+        const baselineCost =
+          parseFloat(document.getElementById("baselineCost").value) || 0;
+
+        // Baseline control and rebate calculations
+        const baselineControlQty =
+          parseFloat(document.getElementById("baselineControlQty")?.value) || 0;
+        const baselineControlReduction =
+          parseFloat(
+            document.getElementById("baselineControlReduction")?.value
+          ) || 0;
+        const baselineControlCost =
+          parseFloat(document.getElementById("baselineControlCost")?.value) ||
+          0;
+        const baselineRebateValue = parseRebateValue(
+          document.getElementById("baselineRebateValue")?.value
+        );
+
+        // Proposed calculations
+        const proposedQuantity =
+          parseInt(document.getElementById("proposedQuantity").value) || 0;
+        const proposedWatts =
+          parseFloat(document.getElementById("proposedWatts").value) || 0;
+        const proposedCost =
+          parseFloat(document.getElementById("proposedCost").value) || 0;
+
+        // Proposed control and rebate calculations
+        const proposedControlQty =
+          parseFloat(document.getElementById("proposedControlQty")?.value) || 0;
+        const proposedControlReduction =
+          parseFloat(
+            document.getElementById("proposedControlReduction")?.value
+          ) || 0;
+        const proposedControlCost =
+          parseFloat(document.getElementById("proposedControlCost")?.value) ||
+          0;
+        const proposedRebateValue = parseRebateValue(
+          document.getElementById("proposedRebateValue")?.value
+        );
+
+        // Calculate baseline metrics with controls
+        let baselineAnnualEnergy =
+          (baselineQuantity * baselineWatts * operationHours * 365) / 1000;
+        if (baselineControlQty > 0 && baselineControlReduction > 0) {
+          baselineAnnualEnergy =
+            baselineAnnualEnergy * (1 - baselineControlReduction / 100);
+        }
+        const baselineAnnualCost =
+          baselineAnnualEnergy * (electricityRate / 100);
+        let baselineInitialCost = baselineQuantity * baselineCost;
+        if (baselineControlQty > 0 && baselineControlCost > 0) {
+          baselineInitialCost += baselineControlQty * baselineControlCost;
+        }
+        if (baselineRebateValue > 0) {
+          baselineInitialCost -= baselineRebateValue;
+        }
+
+        // Calculate proposed metrics with controls
+        let proposedAnnualEnergy =
+          (proposedQuantity * proposedWatts * operationHours * 365) / 1000;
+        if (proposedControlQty > 0 && proposedControlReduction > 0) {
+          proposedAnnualEnergy =
+            proposedAnnualEnergy * (1 - proposedControlReduction / 100);
+        }
+        const proposedAnnualCost =
+          proposedAnnualEnergy * (electricityRate / 100);
+        let proposedInitialCost = proposedQuantity * proposedCost;
+        if (proposedControlQty > 0 && proposedControlCost > 0) {
+          proposedInitialCost += proposedControlQty * proposedControlCost;
+        }
+        if (proposedRebateValue > 0) {
+          proposedInitialCost -= proposedRebateValue;
+        }
+
+        // Calculate savings and ROI
+        const annualSavings = baselineAnnualCost - proposedAnnualCost;
+        const paybackPeriod =
+          proposedInitialCost > 0 && annualSavings > 0
+            ? proposedInitialCost / annualSavings
+            : 0;
+        const roiPercentage =
+          proposedInitialCost > 0
+            ? (annualSavings / proposedInitialCost) * 100
+            : 0;
+        const tenYearSavings = annualSavings * 10;
+
+        // Update display
+        updateDisplay(
+          "baselineInitialCost",
+          formatCurrency(baselineInitialCost)
+        );
+        updateDisplay(
+          "baselineAnnualEnergy",
+          formatEnergy(baselineAnnualEnergy)
+        );
+        updateDisplay("baselineAnnualCost", formatCurrency(baselineAnnualCost));
+
+        updateDisplay(
+          "proposedInitialCost",
+          formatCurrency(proposedInitialCost)
+        );
+        updateDisplay(
+          "proposedAnnualEnergy",
+          formatEnergy(proposedAnnualEnergy)
+        );
+        updateDisplay("proposedAnnualCost", formatCurrency(proposedAnnualCost));
+
+        updateDisplay("annualSavings", formatCurrency(annualSavings));
+        updateDisplay("paybackPeriod", formatYears(paybackPeriod));
+        updateDisplay("roiPercentage", formatPercentage(roiPercentage));
+        updateDisplay("tenYearSavings", formatCurrency(tenYearSavings));
+
+        // Draw charts
+        drawCharts(
+          baselineInitialCost,
+          proposedInitialCost,
+          baselineAnnualCost,
+          proposedAnnualCost
+        );
+
+        // Save data
+        saveData();
+      }
+
+      // Helper function to parse rebate values (supports simple math expressions)
+      function parseRebateValue(value) {
+        if (!value || value === "") return 0;
+
+        try {
+          // Replace 'x' with '*' for multiplication
+          const expression = value.replace(/x/g, "*");
+          const result = eval(expression);
+          return isNaN(result) ? 0 : parseFloat(result);
+        } catch (e) {
+          return 0;
+        }
+      }
+
+      // Chart drawing functions
+      function drawCharts(
+        baselineInitial,
+        proposedInitial,
+        baselineAnnual,
+        proposedAnnual
+      ) {
+        drawTenYearChart(
+          baselineInitial,
+          proposedInitial,
+          baselineAnnual,
+          proposedAnnual
+        );
+        drawCashflowChart(
+          baselineInitial,
+          proposedInitial,
+          baselineAnnual,
+          proposedAnnual
+        );
+      }
+
+      function drawTenYearChart(
+        baselineInitial,
+        proposedInitial,
+        baselineAnnual,
+        proposedAnnual
+      ) {
+        const ctx = document.getElementById("chart_div");
+        if (!ctx) return;
+
+        // Clear previous chart
+        ctx.innerHTML = '<canvas id="tenYearChart"></canvas>';
+        const canvas = document.getElementById("tenYearChart");
+
+        const years = 11;
+        const baselineData = [];
+        const proposedData = [];
+        const labels = [];
+
+        for (let i = 0; i < years; i++) {
+          if (i === 0) {
+            labels[i] = "Initial";
+            baselineData[i] = baselineInitial;
+            proposedData[i] = proposedInitial;
+          } else {
+            labels[i] = `Year ${i}`;
+            baselineData[i] = baselineData[i - 1] + baselineAnnual;
+            proposedData[i] = proposedData[i - 1] + proposedAnnual;
+          }
+        }
+
+        new Chart(canvas, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Baseline",
+                data: baselineData,
+                backgroundColor: "rgba(48, 118, 185, 0.8)",
+                borderColor: "rgba(48, 118, 185, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "Proposed",
+                data: proposedData,
+                backgroundColor: "rgba(147, 182, 78, 0.8)",
+                borderColor: "rgba(147, 182, 78, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Accumulated Purchase and Electricity Costs",
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Cost ($)",
+                },
+              },
+            },
+          },
+        });
+      }
+
+      function drawCashflowChart(
+        baselineInitial,
+        proposedInitial,
+        baselineAnnual,
+        proposedAnnual
+      ) {
+        const ctx = document.getElementById("cashflow_div");
+        if (!ctx) return;
+
+        // Clear previous chart
+        ctx.innerHTML = '<canvas id="cashflowChart"></canvas>';
+        const canvas = document.getElementById("cashflowChart");
+
+        const years = 11;
+        const cashflowData = [];
+        const labels = [];
+
+        for (let i = 0; i < years; i++) {
+          if (i === 0) {
+            labels[i] = "Initial";
+            cashflowData[i] = baselineInitial - proposedInitial;
+          } else {
+            labels[i] = `Year ${i}`;
+            cashflowData[i] =
+              cashflowData[i - 1] + (baselineAnnual - proposedAnnual);
+          }
+        }
+
+        new Chart(canvas, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Cash Flow",
+                data: cashflowData,
+                backgroundColor: "rgba(147, 182, 78, 0.8)",
+                borderColor: "rgba(147, 182, 78, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Accumulated Cash Flow",
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: {
+                  display: true,
+                  text: "Cash Flow ($)",
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Helper functions for formatting
+      function formatCurrency(value) {
+        return (
+          "$" +
+          value.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+
+      function formatEnergy(value) {
+        return (
+          value.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }) + " kWh"
+        );
+      }
+
+      function formatYears(value) {
+        return value.toLocaleString("en-US", {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        });
+      }
+
+      function formatPercentage(value) {
+        return (
+          value.toLocaleString("en-US", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1,
+          }) + "%"
+        );
+      }
+
+      // Update display elements
+      function updateDisplay(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.textContent = value;
+        }
+      }
+
+      // Data persistence
+      function saveData() {
+        const data = {
+          electricityRate: document.getElementById("electricityRate").value,
+          operationHours: document.getElementById("operationHours").value,
+          baselineQuantity: document.getElementById("baselineQuantity").value,
+          baselineWatts: document.getElementById("baselineWatts").value,
+          baselineCost: document.getElementById("baselineCost").value,
+          baselineDescription: document.getElementById("baselineDescription")
+            .value,
+          baselineControlQty:
+            document.getElementById("baselineControlQty")?.value || 0,
+          baselineControlReduction:
+            document.getElementById("baselineControlReduction")?.value || 0,
+          baselineControlCost:
+            document.getElementById("baselineControlCost")?.value || 0,
+          baselineRebateDescription:
+            document.getElementById("baselineRebateDescription")?.value || "",
+          baselineRebateValue:
+            document.getElementById("baselineRebateValue")?.value || "",
+          proposedProduct: document.getElementById("proposedProduct").value,
+          proposedQuantity: document.getElementById("proposedQuantity").value,
+          proposedCost: document.getElementById("proposedCost").value,
+          proposedDescription: document.getElementById("proposedDescription")
+            .value,
+          proposedControlQty:
+            document.getElementById("proposedControlQty")?.value || 0,
+          proposedControlReduction:
+            document.getElementById("proposedControlReduction")?.value || 0,
+          proposedControlCost:
+            document.getElementById("proposedControlCost")?.value || 0,
+          proposedRebateDescription:
+            document.getElementById("proposedRebateDescription")?.value || "",
+          proposedRebateValue:
+            document.getElementById("proposedRebateValue")?.value || "",
+        };
+        localStorage.setItem("ledCalculatorData", JSON.stringify(data));
+      }
+
+      function loadSavedData() {
+        const saved = localStorage.getItem("ledCalculatorData");
+        if (saved) {
+          try {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach((key) => {
+              const element = document.getElementById(key);
+              if (element && data[key] !== undefined) {
+                element.value = data[key];
+              }
+            });
+
+            // Update proposed watts if product is selected
+            if (data.proposedProduct) {
+              updateProposedWatts();
+            }
+
+            // Show control/rebate fields if they have values
+            if (
+              data.baselineControlQty ||
+              data.baselineControlReduction ||
+              data.baselineControlCost
+            ) {
+              document.querySelectorAll(".control-fields").forEach((field) => {
+                field.style.display = "block";
+                field.classList.add("show");
+              });
+              document.querySelector(
+                'button[onclick="toggleControls()"]'
+              ).textContent = "Hide Control";
+            }
+
+            if (data.baselineRebateValue || data.proposedRebateValue) {
+              document.querySelectorAll(".rebate-fields").forEach((field) => {
+                field.style.display = "block";
+                field.classList.add("show");
+              });
+              document.querySelector(
+                'button[onclick="toggleRebates()"]'
+              ).textContent = "Hide Rebate";
+            }
+          } catch (e) {
+            console.error("Error loading saved data:", e);
+          }
+        }
+      }
+
+      // Tab functionality
+      function showTab(tabName) {
+        const tabs = document.querySelectorAll(".tab");
+        tabs.forEach((tab) => tab.classList.remove("active"));
+
+        const activeTab = event.target;
+        activeTab.classList.add("active");
+
+        // Show/hide appropriate chart
+        const chartDiv = document.getElementById("chart_div");
+        const cashflowDiv = document.getElementById("cashflow_div");
+
+        if (tabName === "tenYear") {
+          chartDiv.classList.add("active");
+          cashflowDiv.classList.remove("active");
+        } else if (tabName === "cashflow") {
+          chartDiv.classList.remove("active");
+          cashflowDiv.classList.add("active");
+        }
+      }
+
+      // Control and Rebate Toggle Functions
+      function toggleControls() {
+        const controlFields = document.querySelectorAll(".control-fields");
+        const controlBtn = event.target;
+
+        controlFields.forEach((field) => {
+          if (field.style.display === "none") {
+            field.style.display = "block";
+            field.classList.add("show");
+          } else {
+            field.style.display = "none";
+            field.classList.remove("show");
+          }
+        });
+
+        controlBtn.textContent =
+          controlBtn.textContent === "Add Control"
+            ? "Hide Control"
+            : "Add Control";
+        calculateAll();
+      }
+
+      function toggleRebates() {
+        const rebateFields = document.querySelectorAll(".rebate-fields");
+        const rebateBtn = event.target;
+
+        rebateFields.forEach((field) => {
+          if (field.style.display === "none") {
+            field.style.display = "block";
+            field.classList.add("show");
+          } else {
+            field.style.display = "none";
+            field.classList.remove("show");
+          }
+        });
+
+        rebateBtn.textContent =
+          rebateBtn.textContent === "Add Rebate" ? "Hide Rebate" : "Add Rebate";
+        calculateAll();
+      }
+
+      // Action buttons
+      function addControl() {
+        alert(
+          "Add Control functionality - This would integrate with your control system to provide more accurate energy savings calculations."
+        );
+      }
+
+      function addRebate() {
+        alert(
+          "Add Rebate functionality - This would allow users to input available rebates and incentives to improve ROI calculations."
+        );
+      }
+
+      function printResults() {
+        window.print();
+      }
+
+      function showDisclaimer() {
+        alert(
+          "Disclaimer: This calculator provides estimates based on the information provided. Actual results may vary. Please consult with a qualified professional for detailed analysis."
+        );
+      }
+
+      // Input validation
+      function validateInput(input) {
+        const value = parseFloat(input.value);
+        if (value < 0) {
+          input.value = 0;
+        }
+        calculateAll();
+      }
+
+      // Add input validation to all numeric inputs
+      document.addEventListener("input", function (e) {
+        if (e.target.type === "number") {
+          validateInput(e.target);
+        }
+      });
+
+      // Add event listeners to control and rebate fields
+      document.addEventListener("input", function (e) {
+        if (
+          e.target.id &&
+          (e.target.id.includes("Control") || e.target.id.includes("Rebate"))
+        ) {
+          calculateAll();
+        }
+      });
+    </script>
+  </body>
+</html>
