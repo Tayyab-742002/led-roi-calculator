@@ -13,16 +13,16 @@
       }
 
       :root {
-        --primary-color: #1c367e;
-        --secondary-color: #38a169;
-        --accent-color: #3182ce;
+        --primary-color: #1f377e;
+        --secondary-color: #1f377e;
+        --accent-color: #1f377e;
         --background-color: #f8f9fa;
         --surface-color: #ffffff;
-        --text-primary: #333333;
+        --text-primary: #1f377e;
         --text-secondary: #6c757d;
-        --border-color: #dee2e6;
-        --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
+        --border-color: #e0e6ed;
+        --shadow-light: 0 2px 8px rgba(31, 55, 126, 0.1);
+        --shadow-medium: 0 4px 16px rgba(31, 55, 126, 0.15);
         --border-radius: 8px;
         --transition: all 0.3s ease;
         --spacing-xs: 0.5rem;
@@ -63,7 +63,7 @@
         align-items: center;
         flex-wrap: wrap;
         gap: var(--spacing-sm);
-        border: 1px solid var(--border-color);
+        border: 2px solid var(--primary-color);
         box-shadow: var(--shadow-light);
       }
 
@@ -120,9 +120,14 @@
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, #e4efc0 0%, #abbd73 100%);
-        color: var(--text-primary);
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          #2a4a9e 100%
+        );
+        color: var(--surface-color);
         box-shadow: var(--shadow-light);
+        border: 1px solid var(--primary-color);
       }
 
       .btn-primary:hover {
@@ -132,8 +137,8 @@
 
       .btn-secondary {
         background: var(--surface-color);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
       }
 
       .btn-secondary:hover {
@@ -193,13 +198,13 @@
 
       .input-field input:focus {
         outline: none;
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(56, 130, 206, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(31, 55, 126, 0.1);
       }
 
       .unit-label {
-        background: var(--text-secondary);
-        color: white;
+        background: var(--primary-color);
+        color: var(--surface-color);
         padding: 0.5rem 0.75rem;
         border-radius: var(--border-radius);
         font-weight: 600;
@@ -234,11 +239,11 @@
       }
 
       .baseline h2 {
-        color: var(--accent-color);
+        color: var(--primary-color);
       }
 
       .proposed h2 {
-        color: var(--secondary-color);
+        color: var(--primary-color);
       }
 
       .form-group {
@@ -271,8 +276,8 @@
       .form-group input:focus,
       .form-group select:focus {
         outline: none;
-        border-color: var(--accent-color);
-        box-shadow: 0 0 0 3px rgba(56, 130, 206, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(31, 55, 126, 0.1);
       }
 
       /* Results Display */
@@ -281,7 +286,7 @@
         padding: var(--spacing-sm);
         border-radius: var(--border-radius);
         margin-top: var(--spacing-sm);
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+        box-shadow: 0 4px 12px rgba(31, 55, 126, 0.9);
       }
 
       .results h3 {
@@ -292,7 +297,7 @@
       }
 
       .result-item {
-        background: rgba(112, 181, 252, 0.9);
+        background: rgba(31, 55, 126, 0.5);
         display: flex;
         justify-content: space-between;
         padding: var(--spacing-sm);
@@ -308,7 +313,7 @@
       .result-label {
         font-weight: 600;
         opacity: 0.9;
-        color: black;
+        color: white;
       }
 
       .result-value {
@@ -318,11 +323,13 @@
 
       .proposed .results {
         color: black;
-        box-shadow: 0 4px 12px rgba(25, 135, 84, 0.3);
+        box-shadow: 0 4px 12px rgba(31, 55, 126, 1);
       }
 
       .proposed .result-item {
-        background: #d4e1ab;
+        background: rgba(31, 55, 126, 0.9);
+        border: 1px solid var(--primary-color);
+        color: white;
       }
       /* Savings Section */
       .savings-section {
@@ -369,7 +376,7 @@
         font-size: clamp(1.2rem, 4vw, 2rem);
         font-weight: 800;
         margin-bottom: var(--spacing-xs);
-        color: var(--accent-color);
+        color: var(--primary-color);
       }
 
       .savings-label {
@@ -448,16 +455,16 @@
       }
 
       .tab.active {
-        background: #0d6efd;
+        background: rgba(31, 55, 126, 0.9);
         color: white;
-        border-color: #0d6efd;
-        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+        border-color: rgba(31, 55, 126, 0.9);
+        box-shadow: 0 2px 8px rgba(31, 55, 126, 0.9);
       }
 
       .tab:hover:not(.active) {
         background: #f8f9fa;
-        border-color: #0d6efd;
-        color: #0d6efd;
+        border-color: rgba(31, 55, 126, 0.9);
+        color: rgba(31, 55, 126, 0.9);
       }
 
       /* Footer */
@@ -598,7 +605,7 @@
       .btn:focus,
       input:focus,
       select:focus {
-        outline: 2px solid var(--accent-color);
+        outline: 2px solid var(--primary-color);
         outline-offset: 2px;
       }
 
@@ -1488,14 +1495,14 @@
               {
                 label: "Baseline",
                 data: baselineData,
-                backgroundColor: "rgba(48, 118, 185, 0.8)",
-                borderColor: "rgba(48, 118, 185, 1)",
+                backgroundColor: "rgba(31, 55, 126, 0.5)",
+                borderColor: "rgba(31, 55, 126, 1)",
                 borderWidth: 1,
               },
               {
                 label: "Proposed",
                 data: proposedData,
-                backgroundColor: "rgba(147, 182, 78, 0.8)",
+                backgroundColor: "rgba(31, 55, 126, 0.9)",
                 borderColor: "rgba(147, 182, 78, 1)",
                 borderWidth: 1,
               },
@@ -1559,7 +1566,7 @@
               {
                 label: "Cash Flow",
                 data: cashflowData,
-                backgroundColor: "rgba(147, 182, 78, 0.8)",
+                backgroundColor: "rgba(31, 55, 126, 0.9)",
                 borderColor: "rgba(147, 182, 78, 1)",
                 borderWidth: 1,
               },
