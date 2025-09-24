@@ -1070,10 +1070,16 @@
 
       /* Ensure only the toggle below Cost is visible if duplicates exist */
       .comparison-section.proposed #labourToggleRow {
-        display: none;
+        display: flex;
       }
       .comparison-section.proposed #proposedCostRow + #labourToggleRow {
         display: flex;
+      }
+
+      /* Subtle text for bracket note next to toggle */
+      .toggle-sub {
+        color: var(--text-secondary);
+        font-weight: 500;
       }
     </style>
   </head>
@@ -1321,43 +1327,6 @@
               readonly
             />
           </div>
-
-          <!-- Toggle to hide Labour on PDF (screen-only) -->
-          <!-- <div class="form-group screen-only" id="labourToggleRow">
-            <label></label>
-            <div>
-              <div
-                class="toggle"
-                role="group"
-                aria-label="PDF print visibility options"
-              >
-                <input
-                  type="checkbox"
-                  id="hideLabourOnPrint"
-                  class="toggle-input"
-                  aria-label="Hide Labour Cost and Cost per Luminaire on PDF print"
-                  onchange="toggleHideLabourOnPrint(event)"
-                />
-                <span class="toggle-track" aria-hidden="true"></span>
-                <span class="toggle-label"
-                  >Hide Labour Cost & Cost per Luminaire on PDF</span
-                >
-              </div>
-              <div class="help-text">
-                Totals still include both costs; only these lines are hidden in
-                the printed report.
-              </div>
-            </div>
-          </div> -->
-          <!-- <div class="form-group">
-            <label for="proposedDescription">Description/Catalog</label>
-            <input
-              type="text"
-              id="proposedDescription"
-              placeholder="Product description"
-              readonly
-            />
-          </div> -->
           <div class="form-group" id="proposedLabourRow">
             <label for="proposedLabourCost">Labour Cost (Total)</label>
             <input
@@ -1380,30 +1349,93 @@
               onchange="calculateAll()"
             />
           </div>
+
           <!-- Toggle to hide Labour + Cost on PDF (screen-only) placed under cost inputs -->
-          <div class="form-group screen-only" id="labourToggleRow">
+          <div
+            class="form-group screen-only"
+            id="labourToggleRow"
+            style="
+              border: 1px solid #ddd;
+              padding: 15px;
+              border-radius: 5px;
+              background-color: #f9f9f9;
+              display: flex;
+              justify-content: flex-end;
+            "
+          >
             <label></label>
-            <div>
+            <div
+              style="
+                display: flex;
+                width: 100%;
+                justify-content: flex-end;
+                align-items: center;
+              "
+            >
               <label
+                class="toggle"
+                aria-label="Hide costs on PDF print"
                 style="
                   display: flex;
                   align-items: center;
-                  gap: 8px;
-                  font-weight: 600;
-                  color: var(--text-primary);
+                  cursor: pointer;
+                  user-select: none;
                 "
               >
                 <input
                   type="checkbox"
                   id="hideLabourOnPrint"
+                  class="toggle-input"
                   onchange="toggleHideLabourOnPrint(event)"
+                  style="display: none"
                 />
-                Hide Costs
+                <span
+                  class="toggle-track"
+                  aria-hidden="true"
+                  style="
+                    position: relative;
+                    width: 44px;
+                    height: 24px;
+                    background-color: #ccc;
+                    border-radius: 20px;
+                    transition: background-color 0.3s ease;
+                    margin-right: 10px;
+                  "
+                ></span>
+                <span
+                  class="toggle-dot"
+                  style="
+                    position: absolute;
+                    top: 2px;
+                    left: 2px;
+                    width: 16px;
+                    height: 16px;
+                    background-color: white;
+                    border-radius: 50%;
+                    transition: transform 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                  "
+                ></span>
+                <span class="toggle-label"
+                  >Hide Costs
+                  <span class="toggle-sub"
+                    >(Totals still includes both Costs)</span
+                  ></span
+                >
               </label>
-              <div class="help-text">Totals still includes both Costs</div>
             </div>
           </div>
 
+          <style>
+            /* Toggle states */
+            #hideLabourOnPrint:checked + .toggle-track {
+              background-color: #1f377e !important;
+            }
+
+            #hideLabourOnPrint:checked + .toggle-track + .toggle-dot {
+              transform: translateX(16px) !important;
+            }
+          </style>
           <!-- Control Fields  -->
           <h3
             style="
