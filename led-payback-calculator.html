@@ -178,6 +178,15 @@
         gap: var(--spacing-xs);
       }
 
+      /* Keep input and its unit together */
+      .input-control {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+        flex: 1;
+        min-width: 220px;
+      }
+
       .input-field label {
         font-weight: 600;
         color: var(--text-primary);
@@ -194,6 +203,7 @@
         transition: var(--transition);
         background: var(--surface-color);
         flex: 1;
+        min-width: 0; /* allow shrinking within grid/flex to avoid overflow */
       }
 
       .input-field input:focus {
@@ -202,16 +212,17 @@
         box-shadow: 0 0 0 3px rgba(31, 55, 126, 0.1);
       }
 
-      .unit-label {
+      /* Unit chip shown next to inputs */
+      .unit-chip {
         background: var(--primary-color);
         color: var(--surface-color);
         padding: 0.5rem 0.75rem;
         border-radius: var(--border-radius);
-        font-weight: 600;
+        font-weight: 700;
         font-size: 0.8rem;
-        text-align: center;
         white-space: nowrap;
-        align-self: center;
+        line-height: 1;
+        flex: 0 0 auto; /* prevent shrinking into input */
       }
 
       /* Comparison Sections */
@@ -571,9 +582,16 @@
           gap: var(--spacing-md);
         }
 
-        .unit-label {
-          align-self: center;
-          width: fit-content;
+        .input-field {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        /* Keep input and unit chip together on small screens */
+        .input-control {
+          display: flex;
+          align-items: center;
+          gap: var(--spacing-xs);
+          width: 100%;
         }
 
         .comparison-container {
@@ -609,10 +627,6 @@
           width: 100%;
           font-size: 1rem;
           padding: 0.75rem;
-        }
-        .input-field {
-          flex-direction: column;
-          align-items: stretch;
         }
       }
 
@@ -682,64 +696,237 @@
 
       /* Print Styles */
       @media print {
+        /* Encourage the browser to print backgrounds for an on-screen match */
+        * {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        @page {
+          size: tabloid; /* 11in x 17in */
+          margin: 12mm;
+        }
+
+        /* Do not alter sizes, paddings, or colors; preserve layout */
+        .container {
+          max-width: 100%;
+        }
+
+        /* Compact spacing */
+        .comparison-section,
+        .general-inputs,
+        .results,
+        .savings-section,
+        .footer,
+        .disclaimer,
+        .chart-container {
+          margin-top: 8px !important;
+          margin-bottom: 8px !important;
+          padding-top: 8px !important;
+          padding-bottom: 8px !important;
+        }
+
+        .results .result-item {
+          margin: 4px 0 !important;
+        }
+        .savings-grid {
+          gap: 6px !important;
+        }
+
+        /* Prevent internal splits */
+        .comparison-container,
+        .comparison-section,
+        .general-inputs,
+        .results,
+        .savings-section,
+        .footer,
+        .disclaimer,
+        .chart-container,
+        .chart-content,
+        .form-group,
+        .input-group,
+        .comparison-section .results {
+          /* reinforce keep-together for results */
+          break-inside: avoid;
+          page-break-inside: avoid;
+          overflow: visible !important;
+        }
+
+        /* Page flow: Baseline page, Proposed page, then Analysis + Charts + Disclaimer */
+        .comparison-section.baseline {
+          break-before: page;
+          page-break-before: always;
+          break-after: page;
+          page-break-after: always;
+        }
+        .comparison-section.proposed {
+          break-before: auto;
+          page-break-before: auto;
+          break-after: page;
+          page-break-after: always;
+        }
+
+        .savings-section {
+          break-before: auto;
+          page-break-before: auto;
+        }
+        .chart-container {
+          break-before: auto;
+          page-break-before: auto;
+        }
+        .footer,
+        .disclaimer {
+          break-before: auto;
+          page-break-before: auto;
+        }
+
+        /* Charts scale */
+        .chart-div canvas {
+          max-width: 100% !important;
+          height: auto !important;
+          max-height: 20cm !important; /* keep within tabloid page height with other sections */
+        }
+
+        /* Disable transforms that can cause weird pagination */
+        [style*="transform"],
+        .transformed {
+          transform: none !important;
+        }
+
+        /* Hide interactive controls */
         .header-buttons,
         .btn {
           display: none;
         }
 
-        .container {
-          max-width: none;
-          padding: 0;
-        }
-
-        .comparison-container {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .comparison-section,
-        .general-inputs,
-        .savings-section,
-        .footer,
-        .chart-container {
-          box-shadow: none;
-          border: 1px solid #ddd;
-          margin-bottom: 15px;
-          break-inside: avoid;
-        }
-
-        /* Print colors: dark blue text */
-        body,
-        .disclaimer,
-        .comparison-section h2,
-        label,
-        .savings-label,
-        .result-label,
-        .results h3 {
-          color: #1f377e !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-        .disclaimer {
-          text-align: left !important;
-          background: transparent !important;
-          border-color: #1f377e !important;
-          border-left-color: #1f377e !important;
-        }
-        .result-item {
-          border-color: rgba(31, 55, 126, 0.3) !important;
-        }
-        .tab,
-        .tabs {
-          display: none !important;
-        }
-
-        /* Proposed results: force white text when printing */
+        /* Proposed results text stays white over dark background */
         .proposed .results,
         .proposed .results h3,
         .proposed .result-item,
         .proposed .result-label,
         .proposed .result-value {
           color: #ffffff !important;
+        }
+
+        /* Improve paragraph splitting behavior */
+        p {
+          widows: 3;
+          orphans: 3;
+        }
+
+        /* ==== A4/Narrow-page optimization: enforce structured grid for Baseline/Proposed ==== */
+        @media (max-width: 220mm) {
+          /* Use a 3-column grid to allow the Quantity/Watts/Cost and Control trio to be on one row */
+          .comparison-section {
+            display: grid !important;
+            grid-template-columns: repeat(3, 1fr) !important;
+            gap: 8px 12px !important;
+            align-items: start;
+          }
+
+          /* Headings and block elements span full width */
+          .comparison-section h2,
+          .comparison-section h3,
+          .comparison-section .results {
+            grid-column: 1 / -1;
+          }
+
+          /* Baseline: description/catalog full width first row */
+          .comparison-section.baseline .form-group:has(#baselineDescription),
+          .comparison-section.baseline .form-group:has(#baselineCatalog) {
+            grid-column: 1 / -1;
+          }
+
+          /* Baseline: Quantity, Watts, Cost on one row */
+          .comparison-section.baseline .form-group:has(#baselineQuantity) {
+            grid-column: 1 / 2;
+          }
+          .comparison-section.baseline .form-group:has(#baselineWatts) {
+            grid-column: 2 / 3;
+          }
+          .comparison-section.baseline .form-group:has(#baselineCost) {
+            grid-column: 3 / 4;
+          }
+
+          /* Baseline: control trio on one row */
+          .comparison-section.baseline .form-group:has(#baselineControlQty) {
+            grid-column: 1 / 2;
+          }
+          .comparison-section.baseline
+            .form-group:has(#baselineControlReduction) {
+            grid-column: 2 / 3;
+          }
+          .comparison-section.baseline .form-group:has(#baselineControlCost) {
+            grid-column: 3 / 4;
+          }
+
+          /* Baseline: results full width at the end */
+          .comparison-section.baseline .results {
+            grid-column: 1 / -1;
+          }
+
+          /* Proposed: description/product full width first row */
+          .comparison-section.proposed .form-group:has(#proposedDescription),
+          .comparison-section.proposed .form-group:has(#proposedProduct),
+          .comparison-section.proposed .form-group:has(#proposedCatalog) {
+            grid-column: 1 / -1;
+          }
+
+          /* Proposed: Quantity, Watts, Cost on one row */
+          .comparison-section.proposed .form-group:has(#proposedQuantity) {
+            grid-column: 1 / 2;
+          }
+          .comparison-section.proposed .form-group:has(#proposedWatts) {
+            grid-column: 2 / 3;
+          }
+          .comparison-section.proposed .form-group:has(#proposedCost) {
+            grid-column: 3 / 4;
+          }
+
+          /* Proposed: control trio on one row */
+          .comparison-section.proposed .form-group:has(#proposedControlQty) {
+            grid-column: 1 / 2;
+          }
+          .comparison-section.proposed
+            .form-group:has(#proposedControlReduction) {
+            grid-column: 2 / 3;
+          }
+          .comparison-section.proposed .form-group:has(#proposedControlCost) {
+            grid-column: 3 / 4;
+          }
+
+          /* Proposed: results full width at the end */
+          .comparison-section.proposed .results {
+            grid-column: 1 / -1;
+          }
+
+          /* Tighten inner spacing/typography further on A4 */
+          .comparison-section {
+            font-size: 0.92em !important;
+            padding-top: 6px !important;
+            padding-bottom: 6px !important;
+          }
+          .comparison-section .form-group {
+            margin: 4px 0 !important;
+          }
+          .comparison-section h2 {
+            margin: 4px 0 6px 0 !important;
+          }
+          .comparison-section h3 {
+            margin: 4px 0 6px 0 !important;
+          }
+          .comparison-section .results .result-item {
+            margin: 2px 0 !important;
+          }
+        }
+      }
+      /* Tablet layout: stack general parameters to prevent overlap */
+      @media (max-width: 1024px) {
+        .input-group {
+          grid-template-columns: 1fr;
+        }
+        .input-control {
+          flex-wrap: nowrap;
         }
       }
     </style>
@@ -776,30 +963,34 @@
         <div class="input-group">
           <div class="input-field">
             <label for="electricityRate">Electricity Rate (c/kWh)</label>
-            <input
-              type="number"
-              id="electricityRate"
-              value="10"
-              min="0"
-              step="0.01"
-              onchange="calculateAll()"
-            />
+            <div class="input-control">
+              <input
+                type="number"
+                id="electricityRate"
+                value="10"
+                min="0"
+                step="0.01"
+                onchange="calculateAll()"
+              />
+              <span class="unit-chip">c/kWh</span>
+            </div>
           </div>
-          <div class="unit-label">c/kWh</div>
 
           <div class="input-field">
             <label for="operationHours">Operation Hours</label>
-            <input
-              type="number"
-              id="operationHours"
-              value="12"
-              min="0"
-              max="24"
-              step="0.5"
-              onchange="calculateAll()"
-            />
+            <div class="input-control">
+              <input
+                type="number"
+                id="operationHours"
+                value="12"
+                min="0"
+                max="24"
+                step="0.5"
+                onchange="calculateAll()"
+              />
+              <span class="unit-chip">day</span>
+            </div>
           </div>
-          <div class="unit-label">day</div>
         </div>
       </div>
 
